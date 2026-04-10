@@ -17,7 +17,8 @@ function App() {
     connectAlbedo,
     connectXbull,
     connectEth, 
-    disconnect 
+    disconnect,
+    refreshBalance
   } = useWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,9 +39,9 @@ function App() {
           
           {/* Left Column: Hero Content */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-bold uppercase tracking-wider mb-6">
               <Zap className="w-3 h-3 fill-primary-400" />
@@ -66,9 +67,9 @@ function App() {
 
           {/* Right Column: Interaction Area */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
           >
             <div className="relative">
               {!isConnected && (
@@ -79,6 +80,7 @@ function App() {
                 walletType={walletType} 
                 address={address} 
                 balance={balance}
+                onSuccess={refreshBalance}
               />
             </div>
           </motion.div>

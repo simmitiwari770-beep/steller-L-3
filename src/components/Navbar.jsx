@@ -11,7 +11,7 @@ export default function Navbar({ address, onConnect, onDisconnect, isConnected }
             <Hexagon className="text-white fill-white/20" />
           </div>
           <span className="text-xl font-bold tracking-tight gradient-text">
-            Stellar<span className="text-white">Nexus</span>
+            Stellar<span className="text-white">Pay</span>
           </span>
         </div>
 

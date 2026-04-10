@@ -1,4 +1,4 @@
-import { rpc, Networks as SDKNetworks } from '@stellar/stellar-sdk';
+import * as StellarSdk from '@stellar/stellar-sdk';
 import { StellarWalletsKit, Networks } from '@creit.tech/stellar-wallets-kit';
 import { FreighterModule } from '@creit.tech/stellar-wallets-kit/modules/freighter';
 import { AlbedoModule } from '@creit.tech/stellar-wallets-kit/modules/albedo';
@@ -6,7 +6,8 @@ import { xBullModule } from '@creit.tech/stellar-wallets-kit/modules/xbull';
 
 export const STELLAR_NETWORK = Networks.TESTNET;
 export const RPC_URL = 'https://soroban-testnet.stellar.org';
-export const PASSPHRASE = SDKNetworks.TESTNET;
+export const HORIZON_URL = 'https://horizon-testnet.stellar.org';
+export const PASSPHRASE = StellarSdk.Networks.TESTNET;
 
 // Initialize the kit with modules
 StellarWalletsKit.init({
@@ -18,8 +19,10 @@ StellarWalletsKit.init({
   ],
 });
 
-export const kit = StellarWalletsKit; // Export the class as 'kit' for compatibility with previous hooks
-export const server = new rpc.Server(RPC_URL);
+export const kit = StellarWalletsKit;
+export const server = new StellarSdk.rpc.Server(RPC_URL);
+export const horizonServer = new StellarSdk.Horizon.Server(HORIZON_URL);
+export { StellarSdk };
 
 /**
  * Example Contract ID on Testnet for Registry/Hello world logic

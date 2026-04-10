@@ -8,15 +8,66 @@ A production-ready, high-performance decentralized application (dApp) that enabl
 
 - **🚀 Live Demo**: [View StellarPay on Vercel](https://stellar-pay-demo.vercel.app) *(Replace with your live URL)*
 - **🎥 Demo Video**: [Watch Functionality Overview](https://youtube.com/watch?v=example) *(Replace with your 1-minute video link)*
-- **🧪 Test Coverage**: 7 Tests Passing (See Screenshot below)
+- **🧪 Test Coverage**: 7 Tests Passing (See Screenshots below)
 
 ---
 
-## 📸 Test Output Proof
-All core functionalities are protected by a robust automated test suite.
+## 📸 Visual Showcase (Screenshots)
 
-![Tests Passing Proof](https://raw.githubusercontent.com/user-attachments/assets/example-screenshot.png)
-> **Note to Reviewer**: 7 tests passing covering Wallet hooks, UI rendering, and Transaction logic. Run `npm test` to verify locally.
+### 1. Test Output Proof
+*Automated verification of logic, UI, and wallet hooks using Vitest.*
+
+![Test Output](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/test_output.png)
+
+### 2. Multi-Wallet Connection 
+
+![Wallet Connected](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/wallet_connected.png)
+
+*Universal support for Freighter, Albedo, xBull, and MetaMask with instant, non-blocking real-time balance fetching.*
+
+### 3. Secure Transaction Workflow
+*Authorizing a transfer with live balance ledger and instant receipt generation.*
+
+**1. Dynamic Balance Deduction**
+![Send Transaction](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/send_transaction.png)
+
+**2. Verifiable On-Chain Settlement**
+![Transaction Verified on Stellar Expert](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/explorer_verification.png)
+
+---
+
+## 🏗 Project Architecture & File Structure
+
+StellarPay follows a modular, scalable architecture separating cross-chain logic from the presentation layer.
+
+```text
+steller-L-3/
+├── contracts/               # Smart Contract logic (Soroban Registry)
+├── src/
+│   ├── components/          # Reusable UI (Navbar, Modal, Ledger Form)
+│   ├── hooks/               # Custom Logic (Wallet management, Registry API)
+│   ├── lib/                 # SDK Configurations (Stellar & Ethereum clients)
+│   ├── assets/              # Premium visual assets & animations
+│   ├── App.jsx              # Main dashboard entry point
+│   └── main.jsx             # React Query & Provider bridge
+├── tests/
+│   ├── unit/                # Vitest logic & component test suites
+│   └── setup.js             # JSDOM & Testing Library configuration
+├── README.md                # Project documentation
+├── tailwind.config.js       # Custom Design System tokens
+└── package.json             # Build & Test automation scripts
+```
+
+---
+
+## 🧪 Testing Coverage
+
+The project maintains a **100% success rate** across critical verification paths.
+
+- **Wallet Hooks**: Tests for connection states, address fetching, and multi-provider switching.
+- **Ledger Services**: Verification of async transaction submission and hash propagation.
+- **Component Integrity**: Rendering tests for the glassmorphism UI and dynamic data states.
+- **Integration**: End-to-end simulation of the balance tracking and post-transaction ledger update.
 
 ---
 
@@ -24,53 +75,22 @@ All core functionalities are protected by a robust automated test suite.
 
 - **🔐 Universal Wallet Support**: Native integration for **Freighter**, **Albedo**, **xBull** (Stellar), and **MetaMask** (Ethereum).
 - **💰 Real-Time Balance Tracking**: Live fetching of XLM and ETH balances with instant updates after transactions.
-- **📊 Financial Visibility**: Built-in balance ledger showing "Initial Balance" and "Estimated Money Left" for every transaction.
-- **📦 Smart Contract Backed**: Deep integration with Soroban smart contracts for decentralized secure ledgers.
-- **⚡ Real-Time UX**: Instant transaction tracking with Receipt generation, Copy-to-clipboard hash, and Explorer links.
-- **🎨 Premium UI**: Modern purple-themed glassmorphism design using React 18, Tailwind CSS v4, and Framer Motion.
+- **📊 Financial Visibility**: Built-in balance ledger showing "Initial Balance" and "Estimated Money Left".
+- **🎨 Premium UI**: Modern purple-themed glassmorphism design using React 18 and Tailwind CSS v4.
 
 ---
 
-## 🛠 Tech Stack
-
-- **Frontend**: React 18, Vite, Tailwind CSS v4
-- **Blockchain**: Stellar SDK, Soroban RPC, Ethers.js
-- **Wallets**: @creit.tech/stellar-wallets-kit (Freighter, Albedo, xBull, MetaMask)
-- **State Management**: React Query (TanStack)
-- **Animations**: Framer Motion
-- **Testing**: Vitest, React Testing Library
-
----
-
-## 💻 Local Setup & Testing
+## 💻 Local Setup
 
 1. **Clone & Install**:
    ```bash
    npm install
    ```
 
-2. **Start Dev Server & Run Tests**:
+2. **Run Dev & Tests**:
    ```bash
    npm run dev
    ```
-   *(This command runs the test suite first and then starts the app if they pass)*
-
-3. **Manual Testing**:
-   ```bash
-   npm test
-   ```
 
 ---
 
-## 🔐 Environment Variables
-Create a `.env` file in the root directory:
-```env
-VITE_STELLAR_NETWORK=TESTNET
-VITE_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
-VITE_REGISTRY_CONTRACT_ID=CACDW5ZRT2C4R4N6R4F4R4F4R4F4R4F4R4F4R4F4R4F4R4F4R4F4R4F4
-```
-
----
-
-## 🛡 License
-This project is licensed under the MIT License - see the LICENSE file for details.

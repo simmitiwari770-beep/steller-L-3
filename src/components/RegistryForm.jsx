@@ -4,9 +4,9 @@ import { Send, Loader2, Database, CheckCircle2, RefreshCcw, ExternalLink, Copy, 
 import { useRegistry } from '../hooks/useRegistry';
 import { toast } from 'react-hot-toast';
 
-export default function RegistryForm({ isConnected, walletType, address, balance }) {
+export default function RegistryForm({ isConnected, walletType, address, balance, onSuccess }) {
   const [inputValue, setInputValue] = useState('');
-  const { storedData, isLoadingData, submitData, isSubmitting, lastTxHash } = useRegistry(address, walletType);
+  const { storedData, isLoadingData, submitData, isSubmitting, lastTxHash, lastTxAmount } = useRegistry(address, walletType);
   const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -17,6 +17,7 @@ export default function RegistryForm({ isConnected, walletType, address, balance
       await submitData(inputValue);
       toast.success('Transaction Completed!');
       setInputValue('');
+      if (onSuccess) onSuccess();
     } catch (error) {
       // Error handled in hook
     }
@@ -29,8 +30,9 @@ export default function RegistryForm({ isConnected, walletType, address, balance
     toast.success('Copied to clipboard');
   };
 
-  const isStellar = ['freighter', 'albedo', 'xbull'].includes(walletType);
+  const isStellar = walletType ? ['freighter', 'albedo', 'xbull'].includes(walletType) : false;
   const currency = isStellar ? 'XLM' : 'ETH';
+  const totalDeducted = parseFloat(lastTxAmount || '0.00001') + 0.0001; // exact txAmount + network fee
 
   return (
     <div className="flex flex-col gap-6">
@@ -57,26 +59,22 @@ export default function RegistryForm({ isConnected, walletType, address, balance
         </div>
 
         {isConnected && (
-          <div className="mb-6 grid grid-cols-2 gap-4">
-            <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-500/10">
-                <Wallet className="w-4 h-4 text-green-400" />
-              </div>
-              <div>
-                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Initial Balance</div>
-                <div className="text-sm font-bold text-white">{balance} {currency}</div>
-              </div>
-            </div>
-            <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary-500/10">
-                <RefreshCcw className="w-4 h-4 text-primary-400" />
-              </div>
-              <div>
-                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Est. After Tx</div>
-                <div className="text-sm font-bold text-slate-300">
-                  {lastTxHash ? (parseFloat(balance) - 0.0001).toFixed(4) : (parseFloat(balance) > 0 ? (parseFloat(balance) - 0.0001).toFixed(4) : '0.00')} {currency}
+          <div className="mb-6 p-1 rounded-2xl bg-white/[0.03] border border-white/5 shadow-inner">
+            <div className="p-4 flex flex-col items-center justify-center">
+              <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Available Funds</div>
+              <div className="flex flex-col items-center">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-xl font-black text-white">{balance}</span>
+                  <span className="text-[10px] font-bold text-primary-400">{currency}</span>
+                </div>
+                <div className="text-[10px] text-slate-400 font-medium">
+                  ≈ ${isStellar ? (parseFloat(balance) * 0.11).toFixed(2) : (parseFloat(balance) * 2400).toFixed(2)} USD
                 </div>
               </div>
+            </div>
+            <div className="px-4 py-2 border-t border-white/5 bg-white/[0.01] rounded-b-2xl flex justify-between items-center">
+                <span className="text-[9px] text-slate-600 font-medium italic">Estimated Network Fee: 0.0001 {currency}</span>
+                {lastTxHash && <span className="text-[9px] text-green-500 font-bold uppercase tracking-tighter animate-pulse">Updated</span>}
             </div>
           </div>
         )}
@@ -91,7 +89,7 @@ export default function RegistryForm({ isConnected, walletType, address, balance
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               disabled={!isConnected || isSubmitting}
-              placeholder={isConnected ? "Enter transaction details..." : "Please connect wallet first"}
+              placeholder={isConnected ? "Enter amount of XLM to push..." : "Please connect wallet first"}
               className="glass-input"
             />
           </div>
@@ -140,6 +138,10 @@ export default function RegistryForm({ isConnected, walletType, address, balance
               </div>
 
               <div className="flex gap-3">
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex flex-col items-center justify-center min-w-[120px]">
+                   <div className="text-[10px] text-red-400 font-bold uppercase tracking-widest mb-1">Deducted</div>
+                   <div className="text-sm font-black text-red-500">-{totalDeducted.toFixed(5)} {currency}</div>
+                </div>
                 <a 
                   href={`https://${isStellar ? 'stellar.expert/explorer/testnet' : 'sepolia.etherscan.io'}/tx/${lastTxHash}`}
                   target="_blank"
