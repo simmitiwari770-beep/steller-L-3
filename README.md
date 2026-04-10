@@ -19,12 +19,12 @@ A production-ready, high-performance decentralized application (dApp) that enabl
 
 ### 2. Multi-Wallet Connection 
 
-<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 14 42 PM" src="https://github.com/user-attachments/assets/451b11a5-d910-4dee-b34a-32cdae8aa77a" />
+<img width="1440" height="800" alt="Screenshot 2026-04-10 at 5 14 42 PM" src="https://github.com/user-attachments/assets/451b11a5-d910-4dee-b34a-32cdae8aa77a" />
 
 ### 3. Secure Transaction Workflow
 
 *Authorizing a transfer with live balance ledger and instant receipt generation.*
-<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 15 58 PM" src="https://github.com/user-attachments/assets/c4bbd256-697d-4616-b35f-36fd8a21e476" />
+<img width="1440" height="850" alt="Screenshot 2026-04-10 at 5 15 58 PM" src="https://github.com/user-attachments/assets/c4bbd256-697d-4616-b35f-36fd8a21e476" />
 
 <img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 16 31 PM" src="https://github.com/user-attachments/assets/04d9e557-9a3f-4502-983f-3d72e5af1f32" />
 
