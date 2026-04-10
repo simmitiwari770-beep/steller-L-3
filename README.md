@@ -6,9 +6,9 @@ A production-ready, high-performance decentralized application (dApp) that enabl
 
 ## 🔗 Submission Deliverables
 
-- **🚀 Live Demo**: [View StellarPay on Vercel](https://stellar-pay-demo.vercel.app) *(Replace with your live URL)*
-- **🎥 Demo Video**: [Watch Functionality Overview](https://youtube.com/watch?v=example) *(Replace with your 1-minute video link)*
-- **🧪 Test Coverage**: 7 Tests Passing (See Screenshots below)
+- **🚀 Live Demo**:  https://steller-l-3-6omq6unj2-simmi-tiwaris-projects.vercel.app/
+- **🎥 Demo Video**: https://drive.google.com/file/d/1GYEZxoIZJEwIN90P4TLN81StKMJmb3T1/view?usp=sharing
+- **🧪 Test Coverage**: 10 Tests Passing (See Screenshots below)
 
 ---
 
