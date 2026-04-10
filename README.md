@@ -15,24 +15,18 @@ A production-ready, high-performance decentralized application (dApp) that enabl
 ## 📸 Visual Showcase (Screenshots)
 
 ### 1. Test Output Proof
-*Automated verification of logic, UI, and wallet hooks using Vitest.*
-
-![Test Output](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/test_output.png)
+<img width="940" height="654" alt="Screenshot 2026-04-10 at 5 22 17 PM" src="https://github.com/user-attachments/assets/a3027af2-7a12-4e86-95c6-efde9334085c" />
 
 ### 2. Multi-Wallet Connection 
 
-![Wallet Connected](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/wallet_connected.png)
-
-*Universal support for Freighter, Albedo, xBull, and MetaMask with instant, non-blocking real-time balance fetching.*
+<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 14 42 PM" src="https://github.com/user-attachments/assets/451b11a5-d910-4dee-b34a-32cdae8aa77a" />
 
 ### 3. Secure Transaction Workflow
+
 *Authorizing a transfer with live balance ledger and instant receipt generation.*
+<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 15 58 PM" src="https://github.com/user-attachments/assets/c4bbd256-697d-4616-b35f-36fd8a21e476" />
 
-**1. Dynamic Balance Deduction**
-![Send Transaction](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/send_transaction.png)
-
-**2. Verifiable On-Chain Settlement**
-![Transaction Verified on Stellar Expert](https://raw.githubusercontent.com/simmitiwari770-beep/steller-L-3/main/screenshots/explorer_verification.png)
+<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 16 31 PM" src="https://github.com/user-attachments/assets/04d9e557-9a3f-4502-983f-3d72e5af1f32" />
 
 ---
 
