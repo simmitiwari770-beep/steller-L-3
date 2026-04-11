@@ -32,7 +32,7 @@ export { StellarSdk };
 /**
  * Registry Contract ID on Testnet
  */
-export const REGISTRY_CONTRACT_ID = 'CCGZUXO6G6V7YWWIDDJKVJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6'; 
+export const REGISTRY_CONTRACT_ID = 'CB62EURWHESKXC4DSVFEGYMNSY7K3XHOUIZDUUWEHLIRSQ6WB3ZM2M7J'; 
 
 export async function getContractData(address) {
   if (!address) return null;
@@ -47,7 +47,7 @@ export async function getContractData(address) {
       fee: '100', 
       networkPassphrase: PASSPHRASE 
     })
-    .addOperation(StellarSdk.Operation.invokeHostFunction({ func: invocation, auth: [] }))
+    .addOperation(invocation)
     .setTimeout(0)
     .build();
 
@@ -66,7 +66,7 @@ export async function getGlobalCount() {
   try {
     const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
     // Use a dummy address for public read simulation
-    const dummyAddr = 'GDRS6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R'; // 56 chars
+    const dummyAddr = 'GBAQJ7SPTYGY47Q7AG67O3JSCUZ7KNYNBC4JLZO4YPZHMCEOPVQSYY64';
 
 
     const invocation = contract.call('get_count');
@@ -75,7 +75,7 @@ export async function getGlobalCount() {
       fee: '100', 
       networkPassphrase: PASSPHRASE 
     })
-    .addOperation(StellarSdk.Operation.invokeHostFunction({ func: invocation, auth: [] }))
+    .addOperation(invocation)
     .setTimeout(0)
     .build();
 

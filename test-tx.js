@@ -2,7 +2,7 @@ import * as StellarSdk from '@stellar/stellar-sdk';
 
 const RPC_URL = 'https://soroban-testnet.stellar.org';
 const PASSPHRASE = StellarSdk.Networks.TESTNET;
-const CONTRACT_ID = 'CCGZUXO6G6V7YWWIDDJKVJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6';
+const CONTRACT_ID = 'CB62EURWHESKXC4DSVFEGYMNSY7K3XHOUIZDUUWEHLIRSQ6WB3ZM2M7J';
 
 async function simulateGetData(userAddress) {
   const server = new StellarSdk.rpc.Server(RPC_URL);
@@ -17,10 +17,7 @@ async function simulateGetData(userAddress) {
       new StellarSdk.Account(userAddress, '0'),
       { fee: '100', networkPassphrase: PASSPHRASE }
     )
-    .addOperation(StellarSdk.Operation.invokeHostFunction({
-      func: invocation,
-      auth: []
-    }))
+    .addOperation(invocation)
     .setTimeout(0)
     .build()
   );
@@ -35,5 +32,5 @@ async function simulateGetData(userAddress) {
 }
 
 // Example usage
-const testAddress = 'GDH6766R6ZGHH65RGK6RGK6RGK6RGK6RGK6RGK6RGK6RGK6RGK6RGK6R';
+const testAddress = 'GBAQJ7SPTYGY47Q7AG67O3JSCUZ7KNYNBC4JLZO4YPZHMCEOPVQSYY64';
 simulateGetData(testAddress).catch(console.error);

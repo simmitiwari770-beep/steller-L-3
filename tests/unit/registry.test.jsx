@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useRegistry } from '../../src/hooks/useRegistry';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
@@ -9,7 +9,7 @@ vi.mock('../../src/lib/stellar', () => {
   return {
     getContractData: vi.fn().mockResolvedValue("Mock Soroban Data"),
     getGlobalCount: vi.fn().mockResolvedValue(42),
-    REGISTRY_CONTRACT_ID: 'CCGZUXO6G6V7YWWIDDJKVJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6',
+    REGISTRY_CONTRACT_ID: 'CB62EURWHESKXC4DSVFEGYMNSY7K3XHOUIZDUUWEHLIRSQ6WB3ZM2M7J',
     PASSPHRASE: 'Test SDF Test Network ; September 2015',
     server: {
       simulateTransaction: vi.fn().mockResolvedValue({ 
@@ -30,19 +30,40 @@ vi.mock('../../src/lib/stellar', () => {
       signTransaction: vi.fn().mockResolvedValue('signed_xdr_string'),
     },
     StellarSdk: {
-      Account: vi.fn().mockImplementation((id, seq) => ({ accountId: () => id, sequenceNumber: () => seq })),
-      Contract: vi.fn().mockImplementation(() => ({
-        call: vi.fn().mockReturnValue({}),
-      })),
-      Address: vi.fn().mockImplementation(() => ({
-        toScVal: vi.fn().mockReturnValue({}),
-      })),
+      Account: vi.fn().mockImplementation(function(id, seq) {
+      this.id = id;
+      this.sequence = seq;
+      return this;
+    }),
+
+      Contract: vi.fn().mockImplementation(function() {
+        this.call = vi.fn().mockReturnValue({});
+        return this;
+      }),
+      Address: vi.fn().mockImplementation(function(addr) {
+        this.toScVal = vi.fn().mockReturnValue({});
+        return this;
+      }),
       nativeToScVal: vi.fn().mockReturnValue({}),
-      TransactionBuilder: vi.fn().mockImplementation(() => ({
-        addOperation: vi.fn().mockReturnThis(),
-        setTimeout: vi.fn().mockReturnThis(),
-        build: vi.fn().mockReturnValue({ toXDR: () => 'mock_xdr' }),
-      })),
+      TransactionBuilder: Object.assign(
+        vi.fn().mockImplementation(function() {
+          this.addOperation = vi.fn().mockReturnThis();
+          this.setTimeout = vi.fn().mockReturnThis();
+          this.build = vi.fn().mockReturnValue({ 
+            toXDR: () => 'mock_xdr',
+            hash: () => 'tx_hash'
+          });
+          return this;
+        }),
+        {
+          fromXDR: vi.fn().mockReturnValue({
+            toXDR: () => 'mock_xdr',
+            hash: () => 'tx_hash'
+          })
+        }
+      ),
+
+
       rpc: {
         Api: {
           isSimulationError: vi.fn().mockReturnValue(false),
@@ -89,6 +110,9 @@ describe('useRegistry hook (Soroban Focused)', () => {
       await result.current.submitData('Hello Soroban');
     });
 
-    expect(result.current.lastTxHash).toBe('tx_soroban_123');
+    await waitFor(() => {
+      expect(result.current.lastTxHash).toBe('tx_soroban_123');
+    }, { timeout: 2000 });
   });
 });
+
