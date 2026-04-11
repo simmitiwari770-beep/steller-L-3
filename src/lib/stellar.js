@@ -11,7 +11,12 @@ export const PASSPHRASE = StellarSdk.Networks.TESTNET;
 
 // Initialize the kit with modules
 StellarWalletsKit.init({
+  selectedWalletId: 'freighter',
   network: STELLAR_NETWORK,
+  projectId: 'stellarpay',
+  appName: 'StellarPay',
+  appDescription: 'Secure Soroban Registry',
+  appUrl: window.location.origin,
   modules: [
     new FreighterModule(),
     new AlbedoModule(),
@@ -25,15 +30,61 @@ export const horizonServer = new StellarSdk.Horizon.Server(HORIZON_URL);
 export { StellarSdk };
 
 /**
- * Example Contract ID on Testnet for Registry/Hello world logic
+ * Registry Contract ID on Testnet
  */
-export const REGISTRY_CONTRACT_ID = 'CACDW5ZRT2C4R4N6R4F4R4F4R4F4R4F4R4F4R4F4R4F4R4F4R4F4R4F4'; 
+export const REGISTRY_CONTRACT_ID = 'CCGZUXO6G6V7YWWIDDJKVJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6'; 
 
 export async function getContractData(address) {
+  if (!address) return null;
   try {
-    return "Stored Data from Stellar";
-  } catch (error) {
-    console.error('Error fetching contract data:', error);
+    const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
+    const userAddress = new StellarSdk.Address(address);
+    const invocation = contract.call('get_data', userAddress.toScVal());
+    
+    // Using a random funded account for simulation if user is not yet loaded, 
+    // but here we use the user's address as it's a read-only call
+    const tx = new StellarSdk.TransactionBuilder(new StellarSdk.Account(address, '0'), { 
+      fee: '100', 
+      networkPassphrase: PASSPHRASE 
+    })
+    .addOperation(StellarSdk.Operation.invokeHostFunction({ func: invocation, auth: [] }))
+    .setTimeout(0)
+    .build();
+
+    const response = await server.simulateTransaction(tx);
+    if (StellarSdk.rpc.Api.isSimulationSuccess(response)) {
+      return StellarSdk.scValToNative(response.result.retval);
+    }
     return null;
+  } catch (error) {
+    console.warn('Simulation for get_data failed - contract might not be deployed yet:', error.message);
+    return null;
+  }
+}
+
+export async function getGlobalCount() {
+  try {
+    const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
+    // Use a dummy address for public read simulation
+    const dummyAddr = 'GDRS6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R6R'; // 56 chars
+
+
+    const invocation = contract.call('get_count');
+    
+    const tx = new StellarSdk.TransactionBuilder(new StellarSdk.Account(dummyAddr, '0'), { 
+      fee: '100', 
+      networkPassphrase: PASSPHRASE 
+    })
+    .addOperation(StellarSdk.Operation.invokeHostFunction({ func: invocation, auth: [] }))
+    .setTimeout(0)
+    .build();
+
+    const response = await server.simulateTransaction(tx);
+    if (StellarSdk.rpc.Api.isSimulationSuccess(response)) {
+      return StellarSdk.scValToNative(response.result.retval);
+    }
+    return 0;
+  } catch (error) {
+    return 0;
   }
 }

@@ -17,8 +17,9 @@ class ErrorDisplay extends React.Component {
           <h1 style={{ color: '#fff' }}>⚠️ Application Error</h1>
           <p>The application crashed during startup. See logs below:</p>
           <pre style={{ background: '#000', padding: '20px', borderRadius: '8px', overflow: 'auto', border: '1px solid #333' }}>
-            {this.state.error.stack}
+            {this.state.error?.stack || 'Unknown Error'}
           </pre>
+
         </div>
       );
     }

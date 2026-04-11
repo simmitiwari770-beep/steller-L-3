@@ -1,0 +1,12 @@
+VERSION="2.0.0"
+NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
+
+[DOCUMENTATION]
+ORG_NAME="StellarPay"
+ORG_URL="https://steller-l-3-6omq6unj2-simmi-tiwaris-projects.vercel.app"
+ORG_DESCRIPTION="The Next Gen Secure Ledger"
+ORG_LOGO="https://steller-l-3-6omq6unj2-simmi-tiwaris-projects.vercel.app/icons.svg"
+
+[[PRINCIPALS]]
+name="Developer"
+email="developer@example.com"

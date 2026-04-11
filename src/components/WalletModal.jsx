@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShieldCheck, Zap } from 'lucide-react';
 
-export default function WalletModal({ isOpen, onClose, onConnectStellar, onConnectAlbedo, onConnectXbull, onConnectEth }) {
+export default function WalletModal({ isOpen, onClose, onConnectStellar, onConnectAlbedo, onConnectXbull }) {
   if (!isOpen) return null;
 
   const wallets = [
@@ -34,13 +34,6 @@ export default function WalletModal({ isOpen, onClose, onConnectStellar, onConne
       color: 'red',
       action: onConnectXbull,
       icon: <img src="https://freighterapi.github.io/favicon.ico" alt="xBull" className="w-full h-full object-contain rounded" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<span class="font-black text-red-500">X</span>'; }} />
-    },
-    { 
-      name: 'MetaMask', 
-      network: 'Ethereum', 
-      color: 'orange',
-      action: onConnectEth,
-      icon: <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask" className="w-[85%] h-[85%] object-contain drop-shadow" />
     }
   ];
 

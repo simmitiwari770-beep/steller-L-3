@@ -9,6 +9,6 @@ export default defineConfig({
     global: 'globalThis',
   },
   resolve: {
-    dedupe: ['@stellar/stellar-sdk', 'ethers', 'react', 'react-dom']
+    dedupe: ['@stellar/stellar-sdk', 'react', 'react-dom']
   }
 })

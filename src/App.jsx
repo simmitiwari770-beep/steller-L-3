@@ -16,7 +16,6 @@ function App() {
     connectStellar, 
     connectAlbedo,
     connectXbull,
-    connectEth, 
     disconnect,
     refreshBalance
   } = useWallet();
@@ -45,22 +44,22 @@ function App() {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-bold uppercase tracking-wider mb-6">
               <Zap className="w-3 h-3 fill-primary-400" />
-              Live Multi-Chain Environment
+              Soroban-Powered Ledger
             </div>
             
             <h1 className="text-5xl md:text-7xl font-black text-white leading-none mb-6">
               The Next Gen <br />
-              <span className="gradient-text">Secure Ledger</span>
+              <span className="gradient-text">Stellar Vault</span>
             </h1>
             
             <p className="text-lg text-slate-400 max-w-lg mb-10 leading-relaxed">
-              Experience the power of multi-chain interoperability. Execute secure transfers on Stellar Soroban or Ethereum Sepolia with real-time balance tracking.
+              Experience the power of Stellar Soroban smart contracts. Execute secure, transparent registry entries on the Stellar Testnet with millisecond finality.
             </p>
 
             <div className="grid grid-cols-2 gap-6">
-              <StatCard icon={Globe} label="Interoperability" value="4+ Wallets" />
-              <StatCard icon={Shield} label="Security" value="Encrypted" />
-              <StatCard icon={Activity} label="Balance" value="Real-Time" />
+              <StatCard icon={Globe} label="Network" value="Stellar Testnet" />
+              <StatCard icon={Shield} label="Contract" value="Soroban WASM" />
+              <StatCard icon={Activity} label="Balance" value="Real-Time XLM" />
               <StatCard icon={Zap} label="Latency" value="~5 Seconds" />
             </div>
           </motion.div>
@@ -93,18 +92,17 @@ function App() {
         onConnectStellar={connectStellar}
         onConnectAlbedo={connectAlbedo}
         onConnectXbull={connectXbull}
-        onConnectEth={connectEth}
       />
       
       {/* Footer */}
       <footer className="py-12 border-t border-white/5 bg-black/40">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-slate-500 text-sm font-medium">
-            © 2026 StellarPay. Built for the Future of Web3.
+            © 2026 StellarPay. Built for the Future of Soroban.
           </div>
           <div className="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-400">
-            <a href="#" className="hover:text-primary-400 transition-colors">Explorer</a>
-            <a href="#" className="hover:text-primary-400 transition-colors">Documentation</a>
+            <a href="https://stellar.expert/explorer/testnet" target="_blank" className="hover:text-primary-400 transition-colors">Explorer</a>
+            <a href="https://soroban.stellar.org/" target="_blank" className="hover:text-primary-400 transition-colors">Documentation</a>
             <a href="#" className="hover:text-primary-400 transition-colors">Github</a>
           </div>
         </div>

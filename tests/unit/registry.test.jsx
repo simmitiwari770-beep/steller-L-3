@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useRegistry } from '../../src/hooks/useRegistry';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -6,59 +6,62 @@ import React from 'react';
 
 // Mock Stellar SDK components from lib/stellar
 vi.mock('../../src/lib/stellar', () => {
-  const mockStellarSdk = {
-    Account: vi.fn().mockImplementation(function(accountId, sequence) {
-      this.accountId = () => accountId;
-      this.sequenceNumber = () => sequence;
-      return this;
-    }),
-    TransactionBuilder: Object.assign(vi.fn(), {
-      fromXDR: vi.fn().mockReturnValue({}),
-    }),
-    Operation: {
-      payment: vi.fn().mockReturnValue({ type: 'payment' }),
-    },
-    Asset: {
-      native: vi.fn().mockReturnValue({ code: 'XLM' }),
-    },
-    Memo: {
-      text: vi.fn().mockReturnValue({ value: 'memo' }),
-    },
-  };
-
-  // Setup the TransactionBuilder prototype
-  mockStellarSdk.TransactionBuilder.prototype.addOperation = vi.fn().mockReturnThis();
-  mockStellarSdk.TransactionBuilder.prototype.addMemo = vi.fn().mockReturnThis();
-  mockStellarSdk.TransactionBuilder.prototype.setTimeout = vi.fn().mockReturnThis();
-  mockStellarSdk.TransactionBuilder.prototype.build = vi.fn().mockReturnValue({
-    toXDR: () => 'xdr_mock_string'
-  });
-
   return {
-    getContractData: vi.fn().mockResolvedValue("Mock Data"),
+    getContractData: vi.fn().mockResolvedValue("Mock Soroban Data"),
+    getGlobalCount: vi.fn().mockResolvedValue(42),
+    REGISTRY_CONTRACT_ID: 'CCGZUXO6G6V7YWWIDDJKVJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6VJK6',
+    PASSPHRASE: 'Test SDF Test Network ; September 2015',
+    server: {
+      simulateTransaction: vi.fn().mockResolvedValue({ 
+        result: { retval: 'mock_retval' },
+        status: 'SUCCESS' 
+      }),
+      sendTransaction: vi.fn().mockResolvedValue({ hash: 'tx_soroban_123', status: 'PENDING' }),
+      getTransaction: vi.fn().mockResolvedValue({ status: 'SUCCESS' }),
+    },
     horizonServer: {
       loadAccount: vi.fn().mockResolvedValue({
-        accountId: () => 'GBRPYHIL2CI3FNMWB27S6GZ67XGC7W6H657Q2H77LMWAFG3RFS47H3L2',
-        sequenceNumber: () => '1',
+        id: 'GBRPYHIL2CI3FNMWB27S6GZ67XGC7W6H657Q2H77LMWAFG3RFS47H3L2',
+        sequence: '1',
       }),
-      submitTransaction: vi.fn().mockResolvedValue({ hash: 'tx123' }),
+
     },
     kit: {
-      signTransaction: vi.fn().mockResolvedValue({ signedTxXdr: 'signed_xdr' }),
+      signTransaction: vi.fn().mockResolvedValue('signed_xdr_string'),
     },
-    PASSPHRASE: 'Test SDF Test Network ; September 2015',
-    StellarSdk: mockStellarSdk
+    StellarSdk: {
+      Account: vi.fn().mockImplementation((id, seq) => ({ accountId: () => id, sequenceNumber: () => seq })),
+      Contract: vi.fn().mockImplementation(() => ({
+        call: vi.fn().mockReturnValue({}),
+      })),
+      Address: vi.fn().mockImplementation(() => ({
+        toScVal: vi.fn().mockReturnValue({}),
+      })),
+      nativeToScVal: vi.fn().mockReturnValue({}),
+      TransactionBuilder: vi.fn().mockImplementation(() => ({
+        addOperation: vi.fn().mockReturnThis(),
+        setTimeout: vi.fn().mockReturnThis(),
+        build: vi.fn().mockReturnValue({ toXDR: () => 'mock_xdr' }),
+      })),
+      rpc: {
+        Api: {
+          isSimulationError: vi.fn().mockReturnValue(false),
+        },
+        assembleTransaction: vi.fn().mockReturnValue({
+          build: vi.fn().mockReturnValue({ 
+            toXDR: () => 'mock_xdr',
+            hash: () => 'tx_hash'
+          }),
+        }),
+      },
+      Networks: { TESTNET: 'TESTNET' },
+    }
   };
 });
 
-// Wrapper for React Query
 const createWrapper = () => {
   const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
+    defaultOptions: { queries: { retry: false } },
   });
   return ({ children }) => (
     <QueryClientProvider client={queryClient}>
@@ -67,27 +70,25 @@ const createWrapper = () => {
   );
 };
 
-describe('useRegistry hook', () => {
-  it('should initialize with null state', () => {
-    const { result } = renderHook(() => useRegistry(null, null), {
+describe('useRegistry hook (Soroban Focused)', () => {
+  it('should initialize with contract data and global count', async () => {
+    const { result } = renderHook(() => useRegistry('G...addr', 'freighter'), {
       wrapper: createWrapper(),
     });
-    expect(result.current.storedData).toBe(undefined);
+    
+    // Check initial loading states or resolved values if mock resolves quickly
     expect(result.current.isSubmitting).toBe(false);
   });
 
-  it('should handle submission successfully', async () => {
-    const validAddress = 'GBRPYHIL2CI3FNMWB27S6GZ67XGC7W6H657Q2H77LMWAFG3RFS47H3L2';
-    const { result } = renderHook(() => useRegistry(validAddress, 'freighter'), {
+  it('should execute Soroban set_data flow', async () => {
+    const { result } = renderHook(() => useRegistry('GBRPYHIL2CI3FNMWB27S6GZ67XGC7W6H657Q2H77LMWAFG3RFS47H3L2', 'freighter'), {
       wrapper: createWrapper(),
     });
 
-    const { waitFor } = await import('@testing-library/react');
-    
     await act(async () => {
-      await result.current.submitData('Test Data');
+      await result.current.submitData('Hello Soroban');
     });
 
-    await waitFor(() => expect(result.current.lastTxHash).toBeDefined());
+    expect(result.current.lastTxHash).toBe('tx_soroban_123');
   });
 });

@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useWallet } from '../../src/hooks/useWallet';
 
-// Mock the kit and ethereum lib
+// Mock the kit and stellar lib
 vi.mock('../../src/lib/stellar', () => ({
   kit: {
     setWallet: vi.fn(),
@@ -10,14 +10,12 @@ vi.mock('../../src/lib/stellar', () => ({
   },
   horizonServer: {
     loadAccount: vi.fn().mockResolvedValue({
+      accountId: () => 'G...1234',
+      sequenceNumber: () => '1',
       balances: [{ asset_type: 'native', balance: '100.00' }]
     })
   },
   Networks: { TESTNET: 'TESTNET' }
-}));
-
-vi.mock('../../src/lib/ethereum', () => ({
-  connectMetaMask: vi.fn(),
 }));
 
 describe('useWallet hook', () => {
