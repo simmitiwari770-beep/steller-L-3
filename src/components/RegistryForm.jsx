@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Loader2, Database, CheckCircle2, RefreshCcw, ExternalLink, Copy, Check, Users } from 'lucide-react';
+import { Send, Loader2, Wallet, CheckCircle2, RefreshCcw, ExternalLink, Copy, Check, Users } from 'lucide-react';
 import { useRegistry } from '../hooks/useRegistry';
 import { toast } from 'react-hot-toast';
 
 export default function RegistryForm({ isConnected, walletType, address, balance, onSuccess }) {
-  const [inputValue, setInputValue] = useState('');
-  const { storedData, globalCount, isLoadingData, submitData, isSubmitting, lastTxHash } = useRegistry(address, walletType);
+  const [destination, setDestination] = useState('');
+  const [amount, setAmount] = useState('');
+  
+  // We're adapting the hook for real transfer
+  const { submitData, isSubmitting, lastTxHash } = useRegistry(address, walletType);
   const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!inputValue) return;
+    if (!destination || !amount) return;
 
     try {
-      await submitData(inputValue);
-      setInputValue('');
+      await submitData({ destination, amount });
+      setDestination('');
+      setAmount('');
       if (onSuccess) onSuccess();
     } catch (error) {
       // Error handled in hook
@@ -35,37 +39,20 @@ export default function RegistryForm({ isConnected, walletType, address, balance
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center">
-              <Database className="w-5 h-5 text-primary-400" />
+              <Wallet className="w-5 h-5 text-primary-400" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white">Soroban Registry</h3>
-              <p className="text-sm text-slate-500">Live Decentralized Database</p>
+              <h3 className="text-xl font-bold text-white">Stellar Transfer</h3>
+              <p className="text-sm text-slate-500">Send real XLM to any address</p>
             </div>
-          </div>
-          
-          <div className="flex flex-col items-end">
-             <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1 flex items-center gap-1">
-                <Users className="w-2.4 h-2.4" /> Total Entities
-             </div>
-             <div className="text-sm font-black text-primary-300">
-                {globalCount} registered
-             </div>
           </div>
         </div>
 
         {isConnected && (
           <div className="mb-6 p-1 rounded-2xl bg-white/[0.03] border border-white/5 shadow-inner">
-            <div className="grid grid-cols-2 divide-x divide-white/5">
-                <div className="p-4 flex flex-col items-center">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter mb-1">Your Account</div>
-                    <div className="text-lg font-black text-white">{balance} <span className="text-[10px] text-primary-400">XLM</span></div>
-                </div>
-                <div className="p-4 flex flex-col items-center">
-                    <div className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter mb-1">Stored Value</div>
-                    <div className="text-xs font-medium text-primary-200 truncate max-w-full">
-                        {isLoadingData ? <RefreshCcw className="w-3 h-3 animate-spin" /> : (storedData || 'Empty')}
-                    </div>
-                </div>
+            <div className="p-4 flex flex-col items-center">
+                <div className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter mb-1">Your Available Balance</div>
+                <div className="text-2xl font-black text-white">{balance} <span className="text-xs text-primary-400">XLM</span></div>
             </div>
           </div>
         )}
@@ -73,23 +60,36 @@ export default function RegistryForm({ isConnected, walletType, address, balance
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">
-              Store Data on Soroban
+              Destination Address
             </label>
             <input 
               type="text" 
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
               disabled={!isConnected || isSubmitting}
-              placeholder={isConnected ? "Enter content for your registry key..." : "Connect Stellar Wallet to Interact"}
+              placeholder={isConnected ? "G..." : "Connect your wallet first"}
+              className="glass-input mb-4"
+            />
+
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">
+              Amount (XLM)
+            </label>
+            <input 
+              type="number" 
+              step="0.0000001"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              disabled={!isConnected || isSubmitting}
+              placeholder={isConnected ? "0.00" : "0.00"}
               className="glass-input"
             />
           </div>
 
           <button 
             type="submit"
-            disabled={!isConnected || isSubmitting || !inputValue}
-            className={`w-full glass-button py-4 flex items-center justify-center gap-2 font-bold
-              ${!isConnected || isSubmitting || !inputValue ? 'opacity-50 cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-500 text-white border-primary-400/50 shadow-lg shadow-primary-500/20'}
+            disabled={!isConnected || isSubmitting || !destination || !amount}
+            className={`w-full glass-button py-4 flex items-center justify-center gap-2 font-bold mt-4
+              ${!isConnected || isSubmitting || !destination || !amount ? 'opacity-50 cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-500 text-white border-primary-400/50 shadow-lg shadow-primary-500/20'}
             `}
           >
             {isSubmitting ? (
@@ -97,7 +97,7 @@ export default function RegistryForm({ isConnected, walletType, address, balance
             ) : (
               <Send className="w-5 h-5" />
             )}
-            {isSubmitting ? 'Communicating with RPC...' : 'Execute Host Function'}
+            {isSubmitting ? 'Processing Payment...' : 'Transfer XLM'}
           </button>
         </form>
       </div>
@@ -113,7 +113,7 @@ export default function RegistryForm({ isConnected, walletType, address, balance
               <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4 text-green-400" />
               </div>
-              <h4 className="text-lg font-bold text-white">Registry Updated</h4>
+              <h4 className="text-lg font-bold text-white">Transfer Successful</h4>
             </div>
 
             <div className="space-y-3">
@@ -134,7 +134,7 @@ export default function RegistryForm({ isConnected, walletType, address, balance
                   className="flex-1 glass-button py-2 text-xs flex items-center justify-center gap-2 bg-white/5"
                 >
                   <ExternalLink className="w-3 h-3" />
-                  View Explorer
+                  View on Explorer
                 </a>
               </div>
             </div>

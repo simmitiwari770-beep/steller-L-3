@@ -24,7 +24,7 @@ vi.mock('../../src/lib/stellar', () => {
         id: 'GBRPYHIL2CI3FNMWB27S6GZ67XGC7W6H657Q2H77LMWAFG3RFS47H3L2',
         sequence: '1',
       }),
-
+      submitTransaction: vi.fn().mockResolvedValue({ hash: 'tx_soroban_123' }),
     },
     kit: {
       signTransaction: vi.fn().mockResolvedValue('signed_xdr_string'),
@@ -62,6 +62,12 @@ vi.mock('../../src/lib/stellar', () => {
           })
         }
       ),
+      Operation: {
+        payment: vi.fn().mockReturnValue({})
+      },
+      Asset: {
+        native: vi.fn().mockReturnValue({})
+      },
 
 
       rpc: {
@@ -107,7 +113,7 @@ describe('useRegistry hook (Soroban Focused)', () => {
     });
 
     await act(async () => {
-      await result.current.submitData('Hello Soroban');
+      await result.current.submitData({ destination: 'GBRPYHIL2CI3FNMWB27S6GZ67XGC7W6H657Q2H77LMWAFG3RFS47H3L2', amount: '10' });
     });
 
     await waitFor(() => {
