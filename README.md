@@ -6,30 +6,29 @@ A production-ready, high-performance decentralized application (dApp) that enabl
 
 ## 🔗 Submission Deliverables
 
-- **🚀 Live Demo**: https://steller-l-3-6omq6unj2-simmi-tiwaris-projects.vercel.app/
-- **🎥 Demo Video**: https://drive.google.com/file/d/1GYEZxoIZJEwIN90P4TLN81StKMJmb3T1/view?usp=sharing
+- **🚀 Live Demo**: https://steller-l-3.vercel.app/
+- **🎥 Demo Video**: https://drive.google.com/file/d/1WfZWez-3qCUTAzUrECty5lOHUVUwDvKd/view?usp=sharing
 - **🧪 Test Coverage**: Soroban contracts verified + Frontend hooks pass integration.
 
 ---
 
 ## 📸 Visual Showcase (Screenshots)
 
-### 1. Soroban Integration
-*Pure Rust smart contracts built for the future of Stellar.*
+### 1. Test Output
 
-<img width="940" height="654" alt="Screenshot 2026-04-10 at 5 22 17 PM" src="https://github.com/user-attachments/assets/a3027af2-7a12-4e86-95c6-efde9334085c" />
+<img width="757" height="582" alt="Screenshot 2026-04-12 at 12 28 52 PM" src="https://github.com/user-attachments/assets/61f41f30-23d6-4a15-97d8-76ee1540e250" />
 
-### 2. Modern Stellar Wallet Connection 
-*Universal support for Freighter, Albedo, and xBull with instant, non-blocking real-time balance fetching.*
+### 2. Modern Stellar Wallet Connection
 
-<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 31 08 PM" src="https://github.com/user-attachments/assets/8aee0c18-0398-4411-a267-032a7f1529c0" />
+<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 32 01 PM" src="https://github.com/user-attachments/assets/9ca793f7-4fa4-40c4-9b8c-f2dcd9714588" />
+<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 33 36 PM" src="https://github.com/user-attachments/assets/af3a52bc-8021-4a5d-8815-0b83169238b1" />
 
 ### 3. Secure Transaction Workflow
-*Authorizing transactions with live balance tracking and instant receipt generation via Soroban host functions.*
 
-<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 31 49 PM" src="https://github.com/user-attachments/assets/bf8724ad-3619-4483-b746-a11ddbdfc26f" />
+<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 34 15 PM" src="https://github.com/user-attachments/assets/96551b91-6b11-4a97-a6ad-eac498d0616b" />
 
-<img width="1440" height="900" alt="Screenshot 2026-04-10 at 5 32 20 PM" src="https://github.com/user-attachments/assets/d569b3c3-d322-4af4-848d-2189a6e8f26d" />
+<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 34 44 PM" src="https://github.com/user-attachments/assets/61016806-5c9f-4279-acda-36848827a5cb" />
+
 
 ---
 
