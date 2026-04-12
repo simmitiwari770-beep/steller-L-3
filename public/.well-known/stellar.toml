@@ -4,9 +4,10 @@ NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
 [DOCUMENTATION]
 ORG_NAME="StellarPay"
 ORG_URL="https://steller-l-3.vercel.app"
-ORG_DESCRIPTION="The Next Gen Secure Ledger"
-ORG_LOGO="https://steller-l-3.vercel.app/icons.svg"
+ORG_DESCRIPTION="A secure and ultra-fast Stellar payment gateway and vault integration."
+ORG_LOGO="https://steller-l-3.vercel.app/favicon.svg"
+ORG_TWITTER="https://twitter.com/StellarOrg"
 
 [[PRINCIPALS]]
-name="Developer"
+name="Simmi Tiwari"
 email="developer@example.com"
