@@ -1,10 +1,11 @@
 VERSION="2.0.0"
 NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
+DOMAIN="steller-l-3.vercel.app"
 
 [DOCUMENTATION]
 ORG_NAME="StellarPay"
 ORG_URL="https://steller-l-3.vercel.app"
-ORG_DESCRIPTION="A secure and ultra-fast Stellar payment gateway and vault integration."
+ORG_DESCRIPTION="StellarPay is a next-gen secure vault and payment gateway powered by Stellar Soroban smart contracts on the Testnet."
 ORG_LOGO="https://steller-l-3.vercel.app/favicon.svg"
 ORG_TWITTER="https://twitter.com/StellarOrg"
 
