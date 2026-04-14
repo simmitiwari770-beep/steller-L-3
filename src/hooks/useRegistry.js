@@ -11,11 +11,11 @@ export function useRegistry(address, walletType) {
 
       // 1. Fetch current account info from Horizon
       const accountResponse = await horizonServer.loadAccount(address);
-      const sourceAccount = new StellarSdk.Account(accountResponse.id, accountResponse.sequence);
+      const sourceAccount = new StellarSdk.Account(address, accountResponse.sequence);
 
       // 2. Build the initial transaction for Payment
       let tx = new StellarSdk.TransactionBuilder(sourceAccount, {
-        fee: '100', // Standard basic fee
+        fee: '1000', // Increased fee for faster ledger inclusion
         networkPassphrase: PASSPHRASE,
       })
         .addOperation(StellarSdk.Operation.payment({
@@ -58,13 +58,14 @@ export function useRegistry(address, walletType) {
       if (!address) throw new Error('Wallet not connected');
 
       const accountResponse = await horizonServer.loadAccount(address);
-      const sourceAccount = new StellarSdk.Account(accountResponse.id, accountResponse.sequence);
+      // In SDK 14.x, accountId() and sequenceNumber() are common, but loadAccount response handles sequence
+      const sourceAccount = new StellarSdk.Account(address, accountResponse.sequence);
 
       const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
       const userAddress = new StellarSdk.Address(address);
 
       let tx = new StellarSdk.TransactionBuilder(sourceAccount, {
-        fee: '100',
+        fee: '1000', // Increased fee for priority
         networkPassphrase: PASSPHRASE,
       })
         .addOperation(contract.call('set_data', userAddress.toScVal(), StellarSdk.nativeToScVal(content, { type: 'string' })))
@@ -88,21 +89,38 @@ export function useRegistry(address, walletType) {
       const sendResponse = await server.sendTransaction(signedTx);
       
       // We wait for the result
-      let txStatus = await server.getTransaction(sendResponse.hash);
-      while (txStatus.status === 'NOT_FOUND') {
+      let attempts = 0;
+      let txStatus;
+      
+      while (attempts < 20) {
+        try {
+          txStatus = await server.getTransaction(sendResponse.hash);
+          if (txStatus.status !== 'NOT_FOUND' && txStatus.status !== 'PENDING') {
+            break;
+          }
+        } catch (e) {
+          console.warn('Polling error, retrying...', e);
+        }
         await new Promise(resolve => setTimeout(resolve, 2000));
-        txStatus = await server.getTransaction(sendResponse.hash);
+        attempts++;
       }
 
-      if (txStatus.status === 'FAILED') {
-        throw new Error('Contract invocation failed on network');
+      if (!txStatus || txStatus.status === 'FAILED') {
+        throw new Error('Contract invocation failed or timed out on network');
+      }
+      
+      if (txStatus.status !== 'SUCCESS') {
+        throw new Error(`Transaction timed out or has unknown status: ${txStatus.status}`);
       }
 
       return { hash: sendResponse.hash };
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       toast.success('Data successfully saved to Soroban!');
+      // Optimistically update the query data to make it feel "fast"
+      queryClient.setQueryData(['registryData', address], variables.content);
       queryClient.invalidateQueries({ queryKey: ['registryData', address] });
+      queryClient.invalidateQueries({ queryKey: ['globalCount'] });
     },
     onError: (error) => {
       console.error('setData Mutation Error:', error);
@@ -130,6 +148,7 @@ export function useRegistry(address, walletType) {
     isSubmitting: registryMutation.isPending,
     setData: setDataMutation.mutateAsync,
     isSettingData: setDataMutation.isPending,
-    lastTxHash: registryMutation.data?.hash || setDataMutation.data?.hash,
+    lastTxHash: (!registryMutation.isPending && registryMutation.isSuccess ? registryMutation.data?.hash : null) || 
+                (!setDataMutation.isPending && setDataMutation.isSuccess ? setDataMutation.data?.hash : null),
   };
 }

@@ -5,13 +5,13 @@ import { useRegistry } from '../hooks/useRegistry';
 import { toast } from 'react-hot-toast';
 
 export default function RegistryForm({ isConnected, walletType, address, balance, onSuccess }) {
-  const [activeTab, setActiveTab] = useState('transfer');
+  const [activeTab, setActiveTab] = useState('setData');
   const [destination, setDestination] = useState('');
   const [amount, setAmount] = useState('');
   const [content, setContent] = useState('');
   
   // We're adapting the hook for real transfer and contract interaction
-  const { submitData, isSubmitting, setData, isSettingData, lastTxHash, storedData, isLoadingData } = useRegistry(address, walletType);
+  const { submitData, isSubmitting, setData, isSettingData, lastTxHash, storedData, isLoadingData, globalCount } = useRegistry(address, walletType);
   const [copied, setCopied] = useState(false);
 
   const handleSubmitTransfer = async (e) => {
@@ -73,9 +73,15 @@ export default function RegistryForm({ isConnected, walletType, address, balance
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">{activeTab === 'transfer' ? 'Stellar Transfer' : 'Soroban Registry'}</h3>
-              <p className="text-sm text-slate-500">{activeTab === 'transfer' ? 'Send real XLM to any address' : 'Store data on the blockchain'}</p>
+              <p className="text-sm text-slate-500">{activeTab === 'transfer' ? 'Send real XLM' : `Total Registrations: ${globalCount}`}</p>
             </div>
           </div>
+          {activeTab === 'setData' && (
+            <div className="flex flex-col items-end">
+              <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Global Users</div>
+              <div className="text-lg font-black text-primary-400">{globalCount}</div>
+            </div>
+          )}
         </div>
 
         {isConnected && (

@@ -30,7 +30,7 @@ describe('useWallet hook', () => {
     kit.fetchAddress.mockResolvedValue({ address: 'G...1234' });
 
     const { result } = renderHook(() => useWallet());
-    
+
     await act(async () => {
       await result.current.connectStellar();
     });
@@ -42,7 +42,7 @@ describe('useWallet hook', () => {
 
   it('should disconnect correctly', async () => {
     const { result } = renderHook(() => useWallet());
-    
+
     await act(async () => {
       result.current.disconnect();
     });
@@ -56,7 +56,7 @@ describe('useWallet hook', () => {
     kit.fetchAddress.mockResolvedValue({ address: 'G...ALBE' });
 
     const { result } = renderHook(() => useWallet());
-    
+
     await act(async () => {
       await result.current.connectAlbedo();
     });
@@ -71,7 +71,7 @@ describe('useWallet hook', () => {
     kit.fetchAddress.mockResolvedValue({ address: 'G...XBUL' });
 
     const { result } = renderHook(() => useWallet());
-    
+
     await act(async () => {
       await result.current.connectXbull();
     });
@@ -86,7 +86,7 @@ describe('useWallet hook', () => {
     kit.fetchAddress.mockRejectedValue(new Error('User rejected'));
 
     const { result } = renderHook(() => useWallet());
-    
+
     await act(async () => {
       await result.current.connectStellar();
     });
