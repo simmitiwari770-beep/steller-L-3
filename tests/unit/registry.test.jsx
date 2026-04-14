@@ -18,6 +18,10 @@ vi.mock('../../src/lib/stellar', () => {
       }),
       sendTransaction: vi.fn().mockResolvedValue({ hash: 'tx_soroban_123', status: 'PENDING' }),
       getTransaction: vi.fn().mockResolvedValue({ status: 'SUCCESS' }),
+      prepareTransaction: vi.fn().mockResolvedValue({ 
+        toXDR: () => 'mock_xdr',
+        hash: () => 'tx_hash'
+      }),
     },
     horizonServer: {
       loadAccount: vi.fn().mockResolvedValue({
@@ -113,7 +117,7 @@ describe('useRegistry hook (Soroban Focused)', () => {
     });
 
     await act(async () => {
-      await result.current.submitData({ destination: 'GBRPYHIL2CI3FNMWB27S6GZ67XGC7W6H657Q2H77LMWAFG3RFS47H3L2', amount: '10' });
+      await result.current.setData({ content: 'test data' });
     });
 
     await waitFor(() => {
