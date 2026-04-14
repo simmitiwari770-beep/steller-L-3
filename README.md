@@ -7,7 +7,7 @@ A production-ready, high-performance decentralized application (dApp) that enabl
 ## 🔗 Submission Deliverables
 
 - **🚀 Live Demo**: https://steller-l-3.vercel.app/
-- **🎥 Demo Video**: https://drive.google.com/file/d/1WfZWez-3qCUTAzUrECty5lOHUVUwDvKd/view?usp=sharing
+- **🎥 Demo Video**: https://drive.google.com/file/d/1lt32Fz0w8vq2pTq-jKE6twZeLSsfosOD/view?usp=sharing
 - **🧪 Test Coverage**: Soroban contracts verified + Frontend hooks pass integration.
 
 ---
@@ -20,17 +20,14 @@ A production-ready, high-performance decentralized application (dApp) that enabl
 
 ### 2. Modern Stellar Wallet Connection
 
-<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 32 01 PM" src="https://github.com/user-attachments/assets/9ca793f7-4fa4-40c4-9b8c-f2dcd9714588" />
-<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 33 36 PM" src="https://github.com/user-attachments/assets/af3a52bc-8021-4a5d-8815-0b83169238b1" />
+<img width="1436" height="861" alt="Screenshot 2026-04-14 at 6 04 07 PM" src="https://github.com/user-attachments/assets/eea70f38-4893-4f3a-94e1-29a33cf9ce3d" />
+<img width="1440" height="860" alt="Screenshot 2026-04-14 at 6 04 37 PM" src="https://github.com/user-attachments/assets/dcdbaf0d-7d96-402e-a8da-a4f876fb1559" />
 
 ### 3. Secure Transaction Workflow
 
-<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 34 15 PM" src="https://github.com/user-attachments/assets/96551b91-6b11-4a97-a6ad-eac498d0616b" />
-
-<img width="1440" height="900" alt="Screenshot 2026-04-12 at 12 34 44 PM" src="https://github.com/user-attachments/assets/61016806-5c9f-4279-acda-36848827a5cb" />
-
-
----
+<img width="1439" height="855" alt="Screenshot 2026-04-14 at 6 05 37 PM" src="https://github.com/user-attachments/assets/b730c77a-45b4-42aa-9112-04dc443e536a" />
+<img width="1430" height="845" alt="Screenshot 2026-04-14 at 6 06 56 PM" src="https://github.com/user-attachments/assets/a650afdd-a64f-4796-85c8-3455f855c707" />
+<img width="1440" height="900" alt="Screenshot 2026-04-14 at 6 06 13 PM" src="https://github.com/user-attachments/assets/5bd0d5b2-c36d-49f2-a6ad-7323fb968495" />
 
 ## 🏗 Project Architecture & File Structure
 
