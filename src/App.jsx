@@ -11,6 +11,7 @@ function App() {
   const { 
     address, 
     isConnected, 
+    isConnecting,
     walletType, 
     balance,
     connectStellar, 
