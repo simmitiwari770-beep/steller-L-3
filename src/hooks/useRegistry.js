@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { horizonServer, kit, PASSPHRASE, StellarSdk, REGISTRY_CONTRACT_ID, server, getContractData, getGlobalCount, setContractData } from '../lib/stellar';
+import { horizonServer, kit, PASSPHRASE, StellarSdk, REGISTRY_CONTRACT_ID, server, getContractData, getGlobalCount } from '../lib/stellar';
 import { toast } from 'react-hot-toast';
 
 export function useRegistry(address, walletType) {
@@ -55,8 +55,55 @@ export function useRegistry(address, walletType) {
 
   const setDataMutation = useMutation({
     mutationFn: async ({ content }) => {
+      if (!address) throw new Error('Wallet not connected');
+
+      const accountResponse = await horizonServer.loadAccount(address);
+      const sourceAccount = new StellarSdk.Account(address, accountResponse.sequence);
+
+      const Contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
+      const userAddress = new StellarSdk.Address(address);
+
+      let tx = new StellarSdk.TransactionBuilder(sourceAccount, {
+        fee: '1000',
+        networkPassphrase: PASSPHRASE,
+      })
+        .addOperation(Contract.call('set_data', userAddress.toScVal(), StellarSdk.nativeToScVal(content, { type: 'string' })))
+        .setTimeout(300)
+        .build();
+
+      const preparedTx = await server.prepareTransaction(tx);
+      const xdr = preparedTx.toXDR();
+      
+      const signResult = await kit.signTransaction(xdr, { 
+        network: 'TESTNET', 
+        networkPassphrase: PASSPHRASE 
+      });
+
+      const signedXdr = typeof signResult === 'string' ? signResult : (signResult.signedTxXdr || signResult.signedTransaction);
+      if (!signedXdr) throw new Error('Failed to get signed transaction from wallet.');
+
+      const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXdr, PASSPHRASE);
+      
       toast('Invoking contract...', { icon: '⏳' });
-      return await setContractData(address, content);
+      const sendResponse = await server.sendTransaction(signedTx);
+      
+      let attempts = 0;
+      let txStatus;
+      while (attempts < 20) {
+        try {
+          txStatus = await server.getTransaction(sendResponse.hash);
+          if (txStatus.status !== 'NOT_FOUND' && txStatus.status !== 'PENDING') break;
+        } catch (e) {
+          console.warn('Polling error, retrying...', e);
+        }
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        attempts++;
+      }
+
+      if (!txStatus || txStatus.status === 'FAILED') {
+        throw new Error('Contract invocation failed or timed out on network');
+      }
+      return { hash: sendResponse.hash };
     },
     onSuccess: (data, variables) => {
       toast.success('Data successfully saved to Soroban!');

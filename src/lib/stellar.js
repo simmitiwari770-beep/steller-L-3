@@ -37,9 +37,9 @@ export const REGISTRY_CONTRACT_ID = 'CB62EURWHESKXC4DSVFEGYMNSY7K3XHOUIZDUUWEHLI
 export async function getContractData(address) {
   if (!address) return null;
   try {
-    const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
+    const Contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
     const userAddress = new StellarSdk.Address(address);
-    const invocation = contract.call('get_data', userAddress.toScVal());
+    const invocation = Contract.call('get_data', userAddress.toScVal());
     
     // Using a random funded account for simulation if user is not yet loaded, 
     // but here we use the user's address as it's a read-only call
@@ -64,12 +64,12 @@ export async function getContractData(address) {
 
 export async function getGlobalCount() {
   try {
-    const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
+    const Contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
     // Use a dummy address for public read simulation
     const dummyAddr = 'GBAQJ7SPTYGY47Q7AG67O3JSCUZ7KNYNBC4JLZO4YPZHMCEOPVQSYY64';
 
 
-    const invocation = contract.call('get_count');
+    const invocation = Contract.call('get_count');
     
     const tx = new StellarSdk.TransactionBuilder(new StellarSdk.Account(dummyAddr, '0'), { 
       fee: '100', 
@@ -96,14 +96,14 @@ export async function setContractData(address, content) {
   // In SDK 14.x, loadAccount response provides the sequence
   const sourceAccount = new StellarSdk.Account(address, accountResponse.sequence);
 
-  const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
+  const Contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
   const userAddress = new StellarSdk.Address(address);
 
   let tx = new StellarSdk.TransactionBuilder(sourceAccount, {
     fee: '1000', // Increased fee for priority
     networkPassphrase: PASSPHRASE,
   })
-    .addOperation(contract.call('set_data', userAddress.toScVal(), StellarSdk.nativeToScVal(content, { type: 'string' })))
+    .addOperation(Contract.call('set_data', userAddress.toScVal(), StellarSdk.nativeToScVal(content, { type: 'string' })))
     .setTimeout(300)
     .build();
 
