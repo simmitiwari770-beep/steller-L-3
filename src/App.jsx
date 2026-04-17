@@ -28,7 +28,8 @@ function App() {
       
       <Navbar 
         address={address} 
-        isConnected={isConnected} 
+        isConnected={isConnected}
+        isConnecting={isConnecting} 
         onConnect={() => setIsModalOpen(true)}
         onDisconnect={disconnect}
       />

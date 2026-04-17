@@ -139,7 +139,12 @@ export default function RegistryForm({ isConnected, walletType, address, balance
           </form>
         ) : (
           <form onSubmit={handleSubmitData} className="space-y-4">
-            {storedData && (
+            {isLoadingData ? (
+              <div className="mb-4 p-3 rounded-xl bg-primary-500/5 border border-primary-500/10 flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 text-primary-400 animate-spin" />
+                <span className="text-sm text-primary-400">Loading registered data...</span>
+              </div>
+            ) : storedData && (
               <div className="mb-4 p-3 rounded-xl bg-primary-500/10 border border-primary-500/20">
                 <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Your Registered Data</div>
                 <div className="text-sm text-white font-medium">{storedData}</div>

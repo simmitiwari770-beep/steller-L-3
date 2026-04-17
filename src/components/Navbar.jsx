@@ -1,8 +1,8 @@
-import { Wallet, LogOut, Hexagon, Copy } from 'lucide-react';
+import { Wallet, LogOut, Hexagon, Copy, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 
-export default function Navbar({ address, onConnect, onDisconnect, isConnected }) {
+export default function Navbar({ address, onConnect, onDisconnect, isConnected, isConnecting }) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-6 py-3 border-white/5 bg-black/40">
@@ -42,6 +42,11 @@ export default function Navbar({ address, onConnect, onDisconnect, isConnected }
                 <LogOut className="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform" />
               </button>
             </div>
+          ) : isConnecting ? (
+            <button disabled className="glass-button bg-primary-500/10 border-primary-500/20 flex items-center gap-2 opacity-70">
+              <Loader2 className="w-4 h-4 animate-spin text-primary-400" />
+              <span>Connecting...</span>
+            </button>
           ) : (
             <button 
               onClick={onConnect}
