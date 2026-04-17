@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { horizonServer, kit, PASSPHRASE, StellarSdk, REGISTRY_CONTRACT_ID, server, getContractData, getGlobalCount } from '../lib/stellar';
+import { horizonServer, kit, PASSPHRASE, StellarSdk, REGISTRY_CONTRACT_ID, server, getContractData, getGlobalCount, setContractData } from '../lib/stellar';
 import { toast } from 'react-hot-toast';
 
 export function useRegistry(address, walletType) {
@@ -55,65 +55,8 @@ export function useRegistry(address, walletType) {
 
   const setDataMutation = useMutation({
     mutationFn: async ({ content }) => {
-      if (!address) throw new Error('Wallet not connected');
-
-      const accountResponse = await horizonServer.loadAccount(address);
-      // In SDK 14.x, accountId() and sequenceNumber() are common, but loadAccount response handles sequence
-      const sourceAccount = new StellarSdk.Account(address, accountResponse.sequence);
-
-      const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
-      const userAddress = new StellarSdk.Address(address);
-
-      let tx = new StellarSdk.TransactionBuilder(sourceAccount, {
-        fee: '1000', // Increased fee for priority
-        networkPassphrase: PASSPHRASE,
-      })
-        .addOperation(contract.call('set_data', userAddress.toScVal(), StellarSdk.nativeToScVal(content, { type: 'string' })))
-        .setTimeout(300)
-        .build();
-
-      const preparedTx = await server.prepareTransaction(tx);
-      const xdr = preparedTx.toXDR();
-      
-      const signResult = await kit.signTransaction(xdr, { 
-        network: 'TESTNET', 
-        networkPassphrase: PASSPHRASE 
-      });
-
-      const signedXdr = typeof signResult === 'string' ? signResult : (signResult.signedTxXdr || signResult.signedTransaction);
-      if (!signedXdr) throw new Error('Failed to get signed transaction from wallet.');
-
-      const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXdr, PASSPHRASE);
-
       toast('Invoking contract...', { icon: '⏳' });
-      const sendResponse = await server.sendTransaction(signedTx);
-      
-      // We wait for the result
-      let attempts = 0;
-      let txStatus;
-      
-      while (attempts < 20) {
-        try {
-          txStatus = await server.getTransaction(sendResponse.hash);
-          if (txStatus.status !== 'NOT_FOUND' && txStatus.status !== 'PENDING') {
-            break;
-          }
-        } catch (e) {
-          console.warn('Polling error, retrying...', e);
-        }
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        attempts++;
-      }
-
-      if (!txStatus || txStatus.status === 'FAILED') {
-        throw new Error('Contract invocation failed or timed out on network');
-      }
-      
-      if (txStatus.status !== 'SUCCESS') {
-        throw new Error(`Transaction timed out or has unknown status: ${txStatus.status}`);
-      }
-
-      return { hash: sendResponse.hash };
+      return await setContractData(address, content);
     },
     onSuccess: (data, variables) => {
       toast.success('Data successfully saved to Soroban!');
@@ -132,12 +75,15 @@ export function useRegistry(address, walletType) {
     queryKey: ['registryData', address],
     queryFn: () => getContractData(address),
     enabled: !!address,
+    staleTime: 1000 * 60 * 5, // 5 minutes caching
+    gcTime: 1000 * 60 * 30, // 30 minutes garbage collection
   });
 
   const { data: globalCount } = useQuery({
     queryKey: ['globalCount'],
     queryFn: getGlobalCount,
     refetchInterval: 10000,
+    staleTime: 1000 * 5, // 5 seconds caching
   });
 
   return {

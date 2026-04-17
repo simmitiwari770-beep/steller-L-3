@@ -9,6 +9,7 @@ vi.mock('../../src/lib/stellar', () => {
   return {
     getContractData: vi.fn().mockResolvedValue("Mock Soroban Data"),
     getGlobalCount: vi.fn().mockResolvedValue(42),
+    setContractData: vi.fn().mockResolvedValue({ hash: 'tx_soroban_123' }),
     REGISTRY_CONTRACT_ID: 'CB62EURWHESKXC4DSVFEGYMNSY7K3XHOUIZDUUWEHLIRSQ6WB3ZM2M7J',
     PASSPHRASE: 'Test SDF Test Network ; September 2015',
     server: {

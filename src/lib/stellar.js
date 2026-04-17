@@ -88,3 +88,64 @@ export async function getGlobalCount() {
     return 0;
   }
 }
+
+export async function setContractData(address, content) {
+  if (!address) throw new Error('Wallet not connected');
+
+  const accountResponse = await horizonServer.loadAccount(address);
+  // In SDK 14.x, loadAccount response provides the sequence
+  const sourceAccount = new StellarSdk.Account(address, accountResponse.sequence);
+
+  const contract = new StellarSdk.Contract(REGISTRY_CONTRACT_ID);
+  const userAddress = new StellarSdk.Address(address);
+
+  let tx = new StellarSdk.TransactionBuilder(sourceAccount, {
+    fee: '1000', // Increased fee for priority
+    networkPassphrase: PASSPHRASE,
+  })
+    .addOperation(contract.call('set_data', userAddress.toScVal(), StellarSdk.nativeToScVal(content, { type: 'string' })))
+    .setTimeout(300)
+    .build();
+
+  const preparedTx = await server.prepareTransaction(tx);
+  const xdr = preparedTx.toXDR();
+  
+  const signResult = await kit.signTransaction(xdr, { 
+    network: 'TESTNET', 
+    networkPassphrase: PASSPHRASE 
+  });
+
+  const signedXdr = typeof signResult === 'string' ? signResult : (signResult.signedTxXdr || signResult.signedTransaction);
+  if (!signedXdr) throw new Error('Failed to get signed transaction from wallet.');
+
+  const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXdr, PASSPHRASE);
+
+  const sendResponse = await server.sendTransaction(signedTx);
+  
+  // We wait for the result
+  let attempts = 0;
+  let txStatus;
+  
+  while (attempts < 20) {
+    try {
+      txStatus = await server.getTransaction(sendResponse.hash);
+      if (txStatus.status !== 'NOT_FOUND' && txStatus.status !== 'PENDING') {
+        break;
+      }
+    } catch (e) {
+      console.warn('Polling error, retrying...', e);
+    }
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    attempts++;
+  }
+
+  if (!txStatus || txStatus.status === 'FAILED') {
+    throw new Error('Contract invocation failed or timed out on network');
+  }
+  
+  if (txStatus.status !== 'SUCCESS') {
+    throw new Error(`Transaction timed out or has unknown status: ${txStatus.status}`);
+  }
+
+  return { hash: sendResponse.hash };
+}
