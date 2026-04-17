@@ -72,6 +72,9 @@ The project maintains a rigorous verification path.
 - **💰 Real-Time Balance Tracking**: Live fetching of XLM balances with instant updates.
 - **📜 Soroban Smart Contracts**: Protocol-layer data persistence with auth verification.
 - **🎨 Premium UI**: Modern dark-themed glassmorphism design using React 19 and Tailwind CSS.
+- **⏳ Robust Loading States & Progress Indicators**: Every asynchronous action (wallet connection, fetching history, submitting transactions) has clear visual feedback, minimizing bounce rate.
+- **⚡ Advanced Caching**: Implements basic caching implementation using default Tanstack React Query integrations with explicit staleTime settings to prevent unnecessary network requests.
+
 
 ---
 
